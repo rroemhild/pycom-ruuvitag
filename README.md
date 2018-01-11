@@ -1,12 +1,12 @@
 # MicroPython RuuviTag Scanner
 
-Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroPython Bluetooth enabled microcontroller.
+Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroPython Bluetooth enabled micro controller.
 
 micropython-ruuvitag supports [Data Format 2, 3 and 4](https://github.com/ruuvi/ruuvi-sensor-protocols).
 
 ## Usage
 
-RuuviTagScanner scans for RuuviTags and tries to decode the measuerments from the data format. The result is a list with named tuples.
+RuuviTagScanner scans for RuuviTags and tries to decode the measurements from the data format. The result is a list with named tuples.
 
 ### Get data from sensors
 
