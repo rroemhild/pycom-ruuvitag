@@ -1,9 +1,10 @@
 from setuptools import setup
 import sdist_upip
 
+
 setup(
     name='ruuvitag',
-    version='0.1.0',
+    version='0.2.0',
     description='RuuviTag BLE Sensor Beacon scanner.',
     long_description='More documentation is available at https://github.com/rroemhild/micropython-ruuvitag',
     url='https://github.com/rroemhild/micropython-ruuvitag',
