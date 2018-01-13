@@ -4,16 +4,16 @@ Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroP
 
 micropython-ruuvitag supports [Data Format 2, 3 and 4](https://github.com/ruuvi/ruuvi-sensor-protocols).
 
-## Usage
+This package comes with a scanner and a tracker. The scanner scans for RuuviTags in a pre defined time and return the result. The tracker continuously scans for RuuviTags and call a callback for each tag found.
+
+## Scanner
 
 RuuviTagScanner scans for RuuviTags and decode the data format. The result is a list with named tuples.
 
-### Get data from sensors
-
-Scan 10 seconds for RuuviTag sensors and print the result.
+Scan 10 seconds for RuuviTag sensors and print the result:
 
 ```python
-from ruuvitag import RuuviTagScanner
+from ruuvitag.scanner import RuuviTagScanner
 
 rts = RuuviTagScanner()
 
@@ -21,16 +21,30 @@ for ruuvitag in rts.find_ruuvitags(timeout=10):
     print(ruuvitag)
 ```
 
-### Whitelist devices
+## Tracker
 
-You can collect data from only the devices you want by define a whitelist with mac addresses. Other Devices then will be ignored.
+RuuviTagTracker scans for RuuviTags, decode the data format and call a callback with a with named tuple if a tag was found.
+
+```python
+from ruuvitag.tracker import RuuviTagTracker
+
+def cb(ruuvitag):
+    print(ruuvitag)
+
+rtt = RuuviTagTracker()
+rtt.track_ruuvitags(cb)
+```
+
+## Whitelist devices
+
+You can collect data from only the devices you want by define a whitelist with mac addresses. Other Devices then will be ignored. Whitelists can be used with RuuviTagScanner and RuuviTagTracker.
 
 ```python
 whitelist = (b'aa:bb:cc:dd:ee:21', b'aa:bb:cc:dd:ee:42',)
 rts = RuuviTagScanner(whitelist)
 ```
 
-### Blacklist persistence
+## Blacklist persistence
 
 If the data from a Bluetooth device can not be decoded, the device get on a blacklist as long the MicroPython device is not resetted. For a persistent device blacklist the list should be saved and reloaded.
 
@@ -45,7 +59,7 @@ If the data from a Bluetooth device can not be decoded, the device get on a blac
 >>> rts.blacklist
 ```
 
-### Named tuple format
+## Named tuple format
 
 ```python
 RuuviTag = namedtuple('RuuviTag', (
