@@ -19,7 +19,7 @@ class RuuviTagScanner(RuuviTagBase):
         Each RuuviTag will only be scanned ones each scan.
 
         If device data can not be decoded it's propably not a RuuviTag and
-        the device goes onto the blacklist. Blacklistet devices will be
+        the device goes onto the blacklist. Blacklistet tags will be
         ignored as long this device is not resetted.
         """
         scanned_tags = []
