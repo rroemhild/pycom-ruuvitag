@@ -4,7 +4,8 @@ from network import Bluetooth
 from ucollections import namedtuple
 
 
-__version__ = b'0.3.0'
+__version__ = b'0.4.0'
+
 
 RuuviTagURL = namedtuple('RuuviTagURL', (
     'mac',
@@ -15,6 +16,7 @@ RuuviTagURL = namedtuple('RuuviTagURL', (
     'pressure',
     'id',
 ))
+
 
 RuuviTagRAW = namedtuple('RuuviTagRAW', (
     'mac',
@@ -84,15 +86,15 @@ class RuuviTagBase:
             return None
 
     def get_data_format_raw(self, adv):
-        """
-        Test if device data is in data raw format 3 or 5.
+        """Test if device data is in data raw format 3 or 5.
 
-        Returns  decoded measurements from the manufacturer data
+        Returns decoded measurements from the manufacturer data
         or None it not in format 3 or 5.
 
         The bluetooth device is necessary to get the manufacturer data.
         """
         raw_data_formats = [b'03', b'05']
+
         try:
             mfg_data = self.bluetooth.resolve_adv_data(
                 adv.data, Bluetooth.ADV_MANUFACTURER_DATA
@@ -105,7 +107,7 @@ class RuuviTagBase:
         if data[:4] != b'9904':
             return None
 
-        # Only data format 3 (raw)
+        # Only data format 3 and 5 (raw)
         if data[4:6] not in raw_data_formats:
             return None
 
@@ -197,6 +199,8 @@ class RuuviTagBase:
 
         movement_counter = int(data[34:36], 16)
 
+        measurement_sequence = int(data[36:38], 16)
+
         return (5, humidity, temperature, pressure, acceleration_x,
                 acceleration_y, acceleration_z, battery_voltage, tx_power,
-                movement_counter)
+                movement_counter, measurement_sequence)

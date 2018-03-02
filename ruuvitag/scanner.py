@@ -5,7 +5,7 @@ Scan amout of time for RuuviTags and return a list with tags
 
 import ubinascii
 
-from ruuvitag import RuuviTag, RuuviTagBase
+from ruuvitag import RuuviTagBase, RuuviTagRAW, RuuviTagURL
 
 
 class RuuviTagScanner(RuuviTagBase):
@@ -50,11 +50,15 @@ class RuuviTagScanner(RuuviTagBase):
 
                 # If data format is 2 or 4. extend data with None for
                 # for the missing measurements
-                if data[0] != 3:
-                    data = data + (None, ) * 4
+                if data[0] in [2, 4]:
+                    tag = RuuviTagURL
+                else:
+                    tag = RuuviTagRAW
+                    if data[0] == 3:
+                        data = data + (None, ) * 2
 
                 ruuvi_tags.append(
-                    RuuviTag(mac.decode('utf-8'), adv.rssi, *data)
+                    tag(mac.decode('utf-8'), adv.rssi, *data)
                 )
 
                 scanned_tags.append(mac)
