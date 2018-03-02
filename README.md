@@ -2,7 +2,7 @@
 
 Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroPython Bluetooth enabled micro controller.
 
-micropython-ruuvitag supports [Data Format 2, 3 and 4](https://github.com/ruuvi/ruuvi-sensor-protocols).
+micropython-ruuvitag supports [Data Format 2, 3, 4 and 5](https://github.com/ruuvi/ruuvi-sensor-protocols).
 
 This package comes with a scanner and a tracker. The scanner scans for RuuviTags in a pre defined time and return the result. The tracker continuously scans for RuuviTags and call a callback for each tag found.
 
@@ -59,10 +59,26 @@ If the data from a Bluetooth device can not be decoded, the device get on a blac
 >>> rts.blacklist
 ```
 
-## Named tuple format
+## Named tuple formats
+
+### Format 2 and 4 (Eddystone-URL)
 
 ```python
-RuuviTag = namedtuple('RuuviTag', (
+RuuviTagURL = namedtuple('RuuviTagURL', (
+    'mac',
+    'rssi',
+    'format',
+    'humidity',
+    'temperature',
+    'pressure',
+    'id',
+))
+```
+
+### Format 3 and 5 (RAW)
+
+```python
+RuuviTagRAW = namedtuple('RuuviTagRAW', (
     'mac',
     'rssi',
     'format',
@@ -73,5 +89,8 @@ RuuviTag = namedtuple('RuuviTag', (
     'acceleration_y',
     'acceleration_z',
     'battery_voltage',
+    'power_info',
+    'movement_counter',
+    'measurement_sequence',
 ))
 ```
