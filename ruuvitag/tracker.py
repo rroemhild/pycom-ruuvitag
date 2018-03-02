@@ -5,7 +5,7 @@ Track RuuviTags and call the callback everytime we recieve data.
 
 import ubinascii
 
-from ruuvitag import RuuviTag, RuuviTagBase
+from ruuvitag import RuuviTagBase, RuuviTagRAW, RuuviTagURL
 
 
 class RuuviTagTracker(RuuviTagBase):
@@ -42,9 +42,14 @@ class RuuviTagTracker(RuuviTagBase):
 
                 data = self.decode_data(*data)
 
-                # If data format is 2 or 4. extend data with None for
-                # for the missing measurements
-                if data[0] != 3:
-                    data = data + (None, ) * 4
+                # Select namedtuple for URL or RAW format
+                if data[0] in [2, 4]:
+                    tag = RuuviTagURL
+                else:
+                    tag = RuuviTagRAW
+                    if data[0] == 3:
+                        # Fill missing measurements from RAW 1
+                        # format with None
+                        data = data + (None, ) * 3
 
-                callback(RuuviTag(mac.decode('utf-8'), adv.rssi, *data))
+                callback(tag(mac.decode('utf-8'), adv.rssi, *data))

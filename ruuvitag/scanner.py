@@ -9,19 +9,19 @@ from ruuvitag import RuuviTagBase, RuuviTagRAW, RuuviTagURL
 
 
 class RuuviTagScanner(RuuviTagBase):
+    """
+    Scan for RuuviTags until the timout is reached.
+
+    Each RuuviTag will only be scanned ones each scan.
+
+    If device data can not be decoded it's propably not a RuuviTag and
+    the device goes onto the blacklist. Blacklistet tags will be
+    ignored as long this device is not resetted.
+    """
     def __init__(self, whitelist=None):
         super().__init__(whitelist)
 
     def find_ruuvitags(self, timeout=10):
-        """
-        Scan for RuuviTags until the timout is reached.
-
-        Each RuuviTag will only be scanned ones each scan.
-
-        If device data can not be decoded it's propably not a RuuviTag and
-        the device goes onto the blacklist. Blacklistet tags will be
-        ignored as long this device is not resetted.
-        """
         scanned_tags = []
         ruuvi_tags = []
 
@@ -48,14 +48,15 @@ class RuuviTagScanner(RuuviTagBase):
 
                 data = self.decode_data(*data)
 
-                # If data format is 2 or 4. extend data with None for
-                # for the missing measurements
+                # Select namedtuple for URL or RAW format
                 if data[0] in [2, 4]:
                     tag = RuuviTagURL
                 else:
                     tag = RuuviTagRAW
                     if data[0] == 3:
-                        data = data + (None, ) * 2
+                        # Fill missing measurements from RAW 1
+                        # format with None
+                        data = data + (None, ) * 3
 
                 ruuvi_tags.append(
                     tag(mac.decode('utf-8'), adv.rssi, *data)
