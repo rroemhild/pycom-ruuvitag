@@ -54,6 +54,27 @@ class RuuviTagBase:
     def blacklist(self, value):
         self._blacklist = value
 
+    def get_tag(self, mac, adv):
+        data = self.get_data(adv)
+
+        if data is None:
+            self._blacklist.append(mac)
+            return None
+
+        data = self.decode_data(*data)
+
+        # Select namedtuple for URL or RAW format
+        if data[0] in [2, 4]:
+            tag = RuuviTagURL
+        else:
+            tag = RuuviTagRAW
+            if data[0] == 3:
+                # Fill missing measurements from RAW 1
+                # format with None
+                data = data + (None, ) * 3
+
+        return tag(mac.decode('utf-8'), adv.rssi, *data)
+
     def get_data(self, adv):
         data = self.get_data_format_2and4(adv)
 
