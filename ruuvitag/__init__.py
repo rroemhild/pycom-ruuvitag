@@ -63,7 +63,7 @@ class RuuviTagBase:
         data = self.get_data_format_raw(adv)
 
         if data is not None:
-            return (3, data)
+            return data
 
     @staticmethod
     def get_data_format_2and4(adv):
@@ -111,7 +111,7 @@ class RuuviTagBase:
         if data[4:6] not in raw_data_formats:
             return None
 
-        return data
+        return (int(data[4:6], 16), data)
 
     def decode_data(self, data_format, data):
         if data_format in (2, 4):
@@ -171,11 +171,10 @@ class RuuviTagBase:
     @staticmethod
     def decode_data_format_5(data):
         """RuuviTag RAW 2 decoder"""
-        temperature = int(data[6:10])
+        temperature = int(data[6:10], 16)
         if temperature > 32767:
             temperature -= 65536
         temperature = temperature * 0.005
-        return temperature
 
         humidity = int(data[10:14], 16) / 400
 
@@ -193,9 +192,9 @@ class RuuviTagBase:
         if acceleration_z > 32767:
             acceleration_z -= 65536
 
-        power_str = int(data[30:34])
-        battery_voltage = int(power_str[:5], 16) + 1600
-        tx_power = int(power_str[5:11], 16) * 2 - 40
+        power_int = int(data[30:34], 16)
+        battery_voltage = int(bin(power_int)[2:13], 2) + 1600
+        tx_power = int(bin(power_int)[13:18], 2) * 2 - 40
 
         movement_counter = int(data[34:36], 16)
 
