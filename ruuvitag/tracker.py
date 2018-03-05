@@ -5,7 +5,7 @@ Track RuuviTags and call the callback everytime we recieve data.
 
 import ubinascii
 
-from ruuvitag import RuuviTag, RuuviTagBase
+from ruuvitag import RuuviTagBase
 
 
 class RuuviTagTracker(RuuviTagBase):
@@ -34,17 +34,5 @@ class RuuviTagTracker(RuuviTagBase):
                 elif mac in self._blacklist:
                     continue
 
-                data = self.get_data(adv)
-
-                if data is None:
-                    self._blacklist.append(mac)
-                    continue
-
-                data = self.decode_data(*data)
-
-                # If data format is 2 or 4. extend data with None for
-                # for the missing measurements
-                if data[0] != 3:
-                    data = data + (None, ) * 4
-
-                callback(RuuviTag(mac.decode('utf-8'), adv.rssi, *data))
+                tag = self.get_tag(mac, adv)
+                callback(tag)

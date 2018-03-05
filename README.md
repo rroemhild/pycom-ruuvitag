@@ -1,14 +1,30 @@
 # MicroPython RuuviTag Scanner
 
-Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroPython Bluetooth enabled micro controller.
+Harvest data from [RuuviTag BLE Sensor Beacon](http://ruuvitag.com/) with MicroPython Bluetooth enabled micro controller like the [pycom](https://pycom.io/) devices.
 
-micropython-ruuvitag supports [Data Format 2, 3 and 4](https://github.com/ruuvi/ruuvi-sensor-protocols).
+micropython-ruuvitag supports [Data Format 2, 3, 4 and 5](https://github.com/ruuvi/ruuvi-sensor-protocols).
 
 This package comes with a scanner and a tracker. The scanner scans for RuuviTags in a pre defined time and return the result. The tracker continuously scans for RuuviTags and call a callback for each tag found.
 
+Version: `0.4.0`
+
+## Install
+
+### PyPI
+
+```pthon
+>>> import upip
+>>> upip.install('micropython-ruuvitag')
+```
+
+### Manual
+
+Copy `ruuvitag` directory with all files to your device `lib` directory.
+
+
 ## Scanner
 
-RuuviTagScanner scans for RuuviTags and decode the data format. The result is a list with named tuples.
+`RuuviTagScanner` scans for RuuviTags and decode the data format. The result is a list with named tuples.
 
 Scan 10 seconds for RuuviTag sensors and print the result:
 
@@ -21,9 +37,10 @@ for ruuvitag in rts.find_ruuvitags(timeout=10):
     print(ruuvitag)
 ```
 
+
 ## Tracker
 
-RuuviTagTracker scans for RuuviTags, decode the data format and call a callback with a with named tuple if a tag was found.
+`RuuviTagTracker` scans for RuuviTags, decode the data format and call a callback with a named tuple if recieved data from tag.
 
 ```python
 from ruuvitag.tracker import RuuviTagTracker
@@ -44,6 +61,7 @@ whitelist = (b'aa:bb:cc:dd:ee:21', b'aa:bb:cc:dd:ee:42',)
 rts = RuuviTagScanner(whitelist)
 ```
 
+
 ## Blacklist persistence
 
 If the data from a Bluetooth device can not be decoded, the device get on a blacklist as long the MicroPython device is not resetted. For a persistent device blacklist the list should be saved and reloaded.
@@ -59,10 +77,27 @@ If the data from a Bluetooth device can not be decoded, the device get on a blac
 >>> rts.blacklist
 ```
 
-## Named tuple format
+
+## Named tuple formats
+
+### Format 2 and 4 (Eddystone-URL)
 
 ```python
-RuuviTag = namedtuple('RuuviTag', (
+RuuviTagURL = namedtuple('RuuviTagURL', (
+    'mac',
+    'rssi',
+    'format',
+    'humidity',
+    'temperature',
+    'pressure',
+    'id',
+))
+```
+
+### Format 3 and 5 (RAW)
+
+```python
+RuuviTagRAW = namedtuple('RuuviTagRAW', (
     'mac',
     'rssi',
     'format',
@@ -73,5 +108,8 @@ RuuviTag = namedtuple('RuuviTag', (
     'acceleration_y',
     'acceleration_z',
     'battery_voltage',
+    'power_info',
+    'movement_counter',
+    'measurement_sequence',
 ))
 ```

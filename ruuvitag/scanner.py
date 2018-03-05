@@ -5,23 +5,23 @@ Scan amout of time for RuuviTags and return a list with tags
 
 import ubinascii
 
-from ruuvitag import RuuviTag, RuuviTagBase
+from ruuvitag import RuuviTagBase
 
 
 class RuuviTagScanner(RuuviTagBase):
+    """
+    Scan for RuuviTags until the timout is reached.
+
+    Each RuuviTag will only be scanned ones each scan.
+
+    If device data can not be decoded it's propably not a RuuviTag and
+    the device goes onto the blacklist. Blacklistet tags will be
+    ignored as long this device is not resetted.
+    """
     def __init__(self, whitelist=None):
         super().__init__(whitelist)
 
     def find_ruuvitags(self, timeout=10):
-        """
-        Scan for RuuviTags until the timout is reached.
-
-        Each RuuviTag will only be scanned ones each scan.
-
-        If device data can not be decoded it's propably not a RuuviTag and
-        the device goes onto the blacklist. Blacklistet tags will be
-        ignored as long this device is not resetted.
-        """
         scanned_tags = []
         ruuvi_tags = []
 
@@ -40,23 +40,8 @@ class RuuviTagScanner(RuuviTagBase):
                 elif mac in self._blacklist or mac in scanned_tags:
                     continue
 
-                data = self.get_data(adv)
-
-                if data is None:
-                    self._blacklist.append(mac)
-                    continue
-
-                data = self.decode_data(*data)
-
-                # If data format is 2 or 4. extend data with None for
-                # for the missing measurements
-                if data[0] != 3:
-                    data = data + (None, ) * 4
-
-                ruuvi_tags.append(
-                    RuuviTag(mac.decode('utf-8'), adv.rssi, *data)
-                )
-
+                tag = self.get_tag(mac, adv)
+                ruuvi_tags.append(tag)
                 scanned_tags.append(mac)
 
         # disable bluetooth
