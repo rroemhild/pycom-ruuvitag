@@ -22,7 +22,7 @@ class RuuviTagScanner(RuuviTagBase):
         super().__init__(whitelist)
 
     def find_ruuvitags(self, timeout=10):
-        scanned_tags = []
+        scanned_tags = {}
         ruuvi_tags = []
 
         # enable bluetooth and start scanning
@@ -40,9 +40,12 @@ class RuuviTagScanner(RuuviTagBase):
                 elif mac in self._blacklist or mac in scanned_tags:
                     continue
 
-                tag = self.get_tag(mac, adv)
-                ruuvi_tags.append(tag)
-                scanned_tags.append(mac)
+                # add tag to scanned list
+                scanned_tags[mac] = adv
+
+        for mac in scanned_tags:
+            tag = self.get_tag(mac, scanned_tags[mac])
+            ruuvi_tags.append(tag)
 
         # disable bluetooth
         self.bluetooth.deinit()
