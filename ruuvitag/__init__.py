@@ -1,3 +1,4 @@
+import ustruct
 import ubinascii
 
 from network import Bluetooth
@@ -114,25 +115,24 @@ class RuuviTagBase:
 
         The bluetooth device is necessary to get the manufacturer data.
         """
-        raw_data_formats = [b'03', b'05']
+        raw_data_formats = [3, 5]
 
         try:
-            mfg_data = self.bluetooth.resolve_adv_data(
+            data = self.bluetooth.resolve_adv_data(
                 adv.data, Bluetooth.ADV_MANUFACTURER_DATA
             )
-            data = ubinascii.hexlify(mfg_data)
         except TypeError:
             return None
 
         # Only RuuviTags
-        if data[:4] != b'9904':
+        if data[:2] != b'\x99\x04':
             return None
 
         # Only data format 3 and 5 (raw)
-        if data[4:6] not in raw_data_formats:
+        if data[2] not in raw_data_formats:
             return None
 
-        return (int(data[4:6], 16), data)
+        return (data[2], data)
 
     def decode_data(self, data_format, data):
         if data_format in (2, 4):
@@ -161,30 +161,20 @@ class RuuviTagBase:
     @staticmethod
     def decode_data_format_3(data):
         """RuuviTag RAW 1 decoder"""
-        humidity = int(data[6:8], 16) / 2
+        humidity = data[3] / 2
 
-        temperature_str = data[8:12]
-        temperature = int(temperature_str[:2], 16)
-        temperature += int(temperature_str[2:4], 16) / 100
+        temperature = data[4] + data[5] / 100
         if temperature > 128:
             temperature -= 128
-            temperature = 0 - temperature
+            temperature = round(0 - temperature, 2)
 
-        pressure = int(data[12:16], 16) + 50000
+        pressure = ustruct.unpack('!H', data[6:8])[0] + 50000
 
-        acceleration_x = int(data[16:20], 16)
-        if acceleration_x > 32767:
-            acceleration_x -= 65536
+        acceleration_x = ustruct.unpack('!h', data[8:10])[0]
+        acceleration_y = ustruct.unpack('!h', data[10:12])[0]
+        acceleration_z = ustruct.unpack('!h', data[12:14])[0]
 
-        acceleration_y = int(data[20:24], 16)
-        if acceleration_y > 32767:
-            acceleration_y -= 65536
-
-        acceleration_z = int(data[24:28], 16)
-        if acceleration_z > 32767:
-            acceleration_z -= 65536
-
-        battery_voltage = int(data[28:32], 16)
+        battery_voltage = ustruct.unpack('!H', data[14:16])[0]
 
         return (3, humidity, temperature, pressure, acceleration_x,
                 acceleration_y, acceleration_z, battery_voltage)
@@ -192,34 +182,23 @@ class RuuviTagBase:
     @staticmethod
     def decode_data_format_5(data):
         """RuuviTag RAW 2 decoder"""
-        temperature = int(data[6:10], 16)
-        if temperature > 32767:
-            temperature -= 65536
-        temperature = temperature * 0.005
+        temperature = ustruct.unpack('!h', data[3:5])[0] * 0.005
 
-        humidity = int(data[10:14], 16) / 400
+        humidity = ustruct.unpack('!H', data[5:7])[0] * 0.0025
 
-        pressure = int(data[14:18], 16) + 50000
+        pressure = ustruct.unpack('!H', data[7:9])[0] + 50000
 
-        acceleration_x = int(data[18:22], 16)
-        if acceleration_x > 32767:
-            acceleration_x -= 65536
+        acceleration_x = ustruct.unpack('!h', data[9:11])[0]
+        acceleration_y = ustruct.unpack('!h', data[11:13])[0]
+        acceleration_z = ustruct.unpack('!h', data[13:15])[0]
 
-        acceleration_y = int(data[22:26], 16)
-        if acceleration_y > 32767:
-            acceleration_y -= 65536
+        power_bin = bin(ustruct.unpack('!H', data[15:17])[0])[2:]
+        battery_voltage = int(power_bin[:11], 2) + 1600
+        tx_power = int(power_bin[11:], 2) * 2 - 40
 
-        acceleration_z = int(data[26:30], 16)
-        if acceleration_z > 32767:
-            acceleration_z -= 65536
+        movement_counter = data[18]
 
-        power_int = int(data[30:34], 16)
-        battery_voltage = int(bin(power_int)[2:13], 2) + 1600
-        tx_power = int(bin(power_int)[13:18], 2) * 2 - 40
-
-        movement_counter = int(data[34:36], 16)
-
-        measurement_sequence = int(data[36:38], 16)
+        measurement_sequence = ustruct.unpack('!H', data[18:20])[0]
 
         return (5, humidity, temperature, pressure, acceleration_x,
                 acceleration_y, acceleration_z, battery_voltage, tx_power,
