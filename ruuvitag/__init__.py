@@ -5,7 +5,7 @@ from network import Bluetooth
 from ucollections import namedtuple
 
 
-__version__ = b'0.4.2'
+__version__ = b'0.5.0'
 
 
 RuuviTagURL = namedtuple('RuuviTagURL', (

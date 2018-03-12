@@ -8,7 +8,7 @@ micropython-ruuvitag supports `Data Format 2, 3, 4 and 5 <https://github.com/ruu
 
 This package comes with a scanner and a tracker. The scanner scans for RuuviTags in a pre defined time and return the result. The tracker continuously scans for RuuviTags and call a callback for each tag found.
 
-Version: ``0.4.2``
+Version: ``0.5.0``
 
 Installation
 ------------
