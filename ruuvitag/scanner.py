@@ -43,11 +43,11 @@ class RuuviTagScanner(RuuviTagBase):
                 # add tag to scanned list
                 scanned_tags[mac] = adv
 
+        # disable bluetooth
+        self.bluetooth.deinit()
+
         for mac in scanned_tags:
             tag = self.get_tag(mac, scanned_tags[mac])
             ruuvi_tags.append(tag)
-
-        # disable bluetooth
-        self.bluetooth.deinit()
 
         return ruuvi_tags
