@@ -2,6 +2,8 @@
 MicroPython RuuviTag Scanner
 ============================
 
+|pypi|
+
 Harvest data from `RuuviTag BLE Sensor Beacon <http://ruuvitag.com/>`_ with MicroPython Bluetooth enabled micro controller like the `pycom <https://pycom.io/>`_ devices.
 
 micropython-ruuvitag supports `Data Format 2, 3, 4 and 5 <https://github.com/ruuvi/ruuvi-sensor-protocols>`_.
@@ -118,3 +120,8 @@ Format 3 and 5 (RAW)
         'movement_counter',
         'measurement_sequence',
     ))
+
+
+.. |pypi| image:: https://img.shields.io/pypi/v/micropython-ruuvitag.svg
+    :target: https://pypi.python.org/pypi/micropython-ruuvitag/
+    :alt: PyPi Status
