@@ -34,11 +34,11 @@ class RuuviTagScanner(RuuviTagBase):
             if adv:
                 mac = ubinascii.hexlify(adv.mac, ':')
 
-                if self._whitelist is not None:
-                    if mac not in self._whitelist or mac in scanned_tags:
-                        continue
-                elif mac in self._blacklist or mac in scanned_tags:
+                if mac in scanned_tags or mac in self._blacklist:
                     continue
+                elif self._whitelist is not None:
+                    if mac not in self._whitelist:
+                        continue
 
                 # add tag to scanned list
                 scanned_tags[mac] = adv
