@@ -4,7 +4,7 @@ import sdist_upip
 
 setup(
     name='micropython-ruuvitag',
-    version='0.5.0',
+    version='0.5.1',
     description='RuuviTag BLE Sensor Beacon scanner.',
     long_description=open('README.rst').read(),
     url='https://github.com/rroemhild/micropython-ruuvitag',
