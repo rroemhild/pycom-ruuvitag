@@ -5,7 +5,7 @@ from network import Bluetooth
 from ucollections import namedtuple
 
 
-__version__ = b'0.5.1'
+__version__ = b'0.5.2'
 
 
 RuuviTagURL = namedtuple('RuuviTagURL', (
@@ -146,8 +146,9 @@ class RuuviTagBase:
     def decode_data_format_2and4(data):
         """RuuviTag URL decoder"""
         data = data.encode()
+        identifier = None
         if len(data) > 8:
-            # identifier = data[8:]
+            identifier = data[8]
             data = data[:8]
         decoded = ubinascii.a2b_base64(data)
 
@@ -156,7 +157,7 @@ class RuuviTagBase:
         temperature = (decoded[2] & 127) + decoded[3] / 100
         pressure = ((decoded[4] << 8) + decoded[5]) + 50000
 
-        return (data_format, humidity, temperature, pressure)
+        return (data_format, humidity, temperature, pressure, identifier)
 
     @staticmethod
     def decode_data_format_3(data):
