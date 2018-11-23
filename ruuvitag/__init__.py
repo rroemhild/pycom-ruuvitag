@@ -10,4 +10,4 @@ from RuuviTags:
 See https://github.com/rroemhild/micropython-ruuvitag/ for more information
 """
 
-__version__ = b'0.5.2'
+__version__ = b"0.5.2"

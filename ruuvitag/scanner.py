@@ -12,6 +12,7 @@ class RuuviTagScanner(RuuviTagBase):
     the device goes onto the blacklist. Blacklisted tags will be
     ignored as long the device is not resetted.
     """
+
     def __init__(self, whitelist=None):
         super().__init__(whitelist)
 
@@ -26,7 +27,7 @@ class RuuviTagScanner(RuuviTagBase):
         while self.bluetooth.isscanning():
             adv = self.bluetooth.get_adv()
             if adv:
-                mac = ubinascii.hexlify(adv.mac, ':')
+                mac = ubinascii.hexlify(adv.mac, ":")
 
                 if mac in scanned_tags or mac in self._blacklist:
                     continue

@@ -1,7 +1,11 @@
 from network import Bluetooth
 
 from ruuvitag.format import RuuviTagURL, RuuviTagRAW
-from ruuvitag.decoder import (decode_data_format_2and4, decode_data_format_3, decode_data_format_5)
+from ruuvitag.decoder import (
+    decode_data_format_2and4,
+    decode_data_format_3,
+    decode_data_format_5,
+)
 
 
 class RuuviTag:
@@ -12,8 +16,9 @@ class RuuviTag:
         self.bluetooth.deinit()
 
     def __repr__(self):
-        return '{}(whitelist={!r}, blacklist={!r})'.format(
-            type(self).__name__, self._whitelist, self._blacklist)
+        return "{}(whitelist={!r}, blacklist={!r})".format(
+            type(self).__name__, self._whitelist, self._blacklist
+        )
 
     @property
     def blacklist(self):
@@ -40,9 +45,9 @@ class RuuviTag:
             if data[0] == 3:
                 # Fill missing measurements from RAW 1
                 # format with None
-                data = data + (None, ) * 3
+                data = data + (None,) * 3
 
-        return tag(mac.decode('utf-8'), adv.rssi, *data)
+        return tag(mac.decode("utf-8"), adv.rssi, *data)
 
     def get_data(self, adv):
         data = self.get_data_format_2and4(adv)
@@ -62,15 +67,15 @@ class RuuviTag:
 
         Returns measurement data or None it not in format 2 or 4.
         """
-        data = adv.data.decode('utf-8')
+        data = adv.data.decode("utf-8")
         try:
-            index = data.find('ruu.vi/#')
+            index = data.find("ruu.vi/#")
             if index > -1:
-                return data[(index + 8):]
+                return data[(index + 8) :]
             else:
-                index = data.find('r/')
+                index = data.find("r/")
                 if index > -1:
-                    return data[(index + 2):]
+                    return data[(index + 2) :]
                 return None
         except Exception:
             return None
@@ -93,7 +98,7 @@ class RuuviTag:
             return None
 
         # Only RuuviTags
-        if data[:2] != b'\x99\x04':
+        if data[:2] != b"\x99\x04":
             return None
 
         # Only data format 3 and 5 (raw)
