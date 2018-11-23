@@ -1,15 +1,11 @@
-""" RuuviTagTracker
-
-Track RuuviTags and call the callback everytime we recieve data.
-"""
-
 import ubinascii
 
-from ruuvitag import RuuviTagBase
+from ruuvitag.core import RuuviTagBase
 
 
 class RuuviTagTracker(RuuviTagBase):
-    """
+    """Ruuvi Tag Tracker
+
     Track RuuviTags and call a callback on each new recieved data.
 
     If device data can not be decoded it's propably not a RuuviTag and

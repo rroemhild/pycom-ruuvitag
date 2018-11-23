@@ -1,22 +1,16 @@
-""" RuuviTagScanner
-
-Scan amout of time for RuuviTags and return a list with tags
-"""
-
 import ubinascii
 
-from ruuvitag import RuuviTagBase
+from ruuvitag.core import RuuviTagBase
 
 
 class RuuviTagScanner(RuuviTagBase):
-    """
+    """Ruuvi Tag Scanner
+
     Scan for RuuviTags until the timout is reached.
 
-    Each RuuviTag will only be scanned ones each scan.
-
     If device data can not be decoded it's propably not a RuuviTag and
-    the device goes onto the blacklist. Blacklistet tags will be
-    ignored as long this device is not resetted.
+    the device goes onto the blacklist. Blacklisted tags will be
+    ignored as long the device is not resetted.
     """
     def __init__(self, whitelist=None):
         super().__init__(whitelist)
