@@ -71,11 +71,11 @@ class RuuviTag:
         try:
             index = data.find("ruu.vi/#")
             if index > -1:
-                return data[(index + 8) :]
+                return data[(index + 8):]
             else:
                 index = data.find("r/")
                 if index > -1:
-                    return data[(index + 2) :]
+                    return data[(index + 2):]
                 return None
         except Exception:
             return None

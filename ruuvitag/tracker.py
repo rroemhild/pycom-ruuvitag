@@ -1,9 +1,9 @@
-import ubinascii
+from ubinascii import hexlify
 
-from ruuvitag.core import RuuviTagBase
+from ruuvitag.core import RuuviTag
 
 
-class RuuviTagTracker(RuuviTagBase):
+class RuuviTagTracker(RuuviTag):
     """Ruuvi Tag Tracker
 
     Track RuuviTags and call a callback on each new recieved data.
@@ -20,13 +20,17 @@ class RuuviTagTracker(RuuviTagBase):
         self.bluetooth.init()
         self.bluetooth.start_scan(-1)
 
-        while self.bluetooth.isscanning():
-            adv = self.bluetooth.get_adv()
-            if adv:
-                mac = ubinascii.hexlify(adv.mac, ":")
+        get_adv = self.bluetooth.get_adv
+        isscanning = self.bluetooth.isscanning
+        whitelist = self._whitelist
 
-                if self._whitelist is not None:
-                    if mac not in self._whitelist:
+        while isscanning():
+            adv = get_adv()
+            if adv:
+                mac = hexlify(adv.mac, ":")
+
+                if whitelist is not None:
+                    if mac not in whitelist:
                         continue
                 elif mac in self._blacklist:
                     continue

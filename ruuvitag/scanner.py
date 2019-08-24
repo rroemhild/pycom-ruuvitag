@@ -1,9 +1,9 @@
-import ubinascii
+from ubinascii import hexlify
 
-from ruuvitag.core import RuuviTagBase
+from ruuvitag.core import RuuviTag
 
 
-class RuuviTagScanner(RuuviTagBase):
+class RuuviTagScanner(RuuviTag):
     """Ruuvi Tag Scanner
 
     Scan for RuuviTags until the timout is reached.
@@ -24,15 +24,19 @@ class RuuviTagScanner(RuuviTagBase):
         self.bluetooth.init()
         self.bluetooth.start_scan(timeout)
 
-        while self.bluetooth.isscanning():
-            adv = self.bluetooth.get_adv()
+        get_adv = self.bluetooth.get_adv
+        isscanning = self.bluetooth.isscanning
+        whitelist = self._whitelist
+
+        while isscanning():
+            adv = get_adv()
             if adv:
-                mac = ubinascii.hexlify(adv.mac, ":")
+                mac = hexlify(adv.mac, ":")
 
                 if mac in scanned_tags or mac in self._blacklist:
                     continue
-                elif self._whitelist is not None:
-                    if mac not in self._whitelist:
+                elif whitelist is not None:
+                    if mac not in whitelist:
                         continue
 
                 # add tag to scanned list

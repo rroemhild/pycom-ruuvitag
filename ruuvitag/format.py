@@ -3,7 +3,15 @@ from ucollections import namedtuple
 
 RuuviTagURL = namedtuple(
     "RuuviTagURL",
-    ("mac", "rssi", "format", "humidity", "temperature", "pressure", "id"),
+    (
+        "mac",
+        "rssi",
+        "format",
+        "humidity",
+        "temperature",
+        "pressure",
+        "id",
+    ),
 )
 
 
