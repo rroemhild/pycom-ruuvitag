@@ -6,7 +6,7 @@ from ruuvitag import __version__
 
 setup(
     name='micropython-ruuvitag',
-    version=__version__,
+    version=__version__.decode("utf-8"),
     description='RuuviTag BLE Sensor Beacon scanner.',
     long_description=open('README.rst').read(),
     url='https://github.com/rroemhild/micropython-ruuvitag/',
