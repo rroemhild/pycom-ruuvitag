@@ -81,12 +81,13 @@ class RuuviTag:
             return None
 
     def get_data_format_raw(self, adv):
-        """Test if device data is in raw format 3 or 5.
+        """Test if device data is in raw format 3 (RAWv1) or 5 (RAWv2).
 
         Returns decoded measurements from the manufacturer data
-        or None if not in format 3 or 5.
+        or None if not in format RAWv1, RAWv2 or no data can be extracetd
+        from the device.
 
-        The bluetooth device is necessary to get the manufacturer data.
+        The Bluetooth device is necessary to get the manufacturer data.
         """
         raw_data_formats = [3, 5]
 
@@ -95,6 +96,9 @@ class RuuviTag:
                 adv.data, Bluetooth.ADV_MANUFACTURER_DATA
             )
         except TypeError:
+            return None
+
+        if data is None:
             return None
 
         # Only RuuviTags
