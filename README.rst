@@ -21,6 +21,13 @@ The easiest way to install the package is via ``upip``:
 
 For manual installation copy the ``ruuvitag`` directory with all files to your device ``lib`` directory.
 
+Install with mpfshell
+~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+    $ mpfshell ttyUSB0 -s install.mpf
+
 
 Scanner
 -------
@@ -84,8 +91,8 @@ If the data from a Bluetooth device can not be decoded, the device get on a blac
 Named tuple formats
 -------------------
 
-Format 2 and 4 (Eddystone-URL)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Data Format 2 and 4 (Eddystone-URL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -99,8 +106,8 @@ Format 2 and 4 (Eddystone-URL)
         'id',
     ))
 
-Format 3 and 5 (RAW)
-^^^^^^^^^^^^^^^^^^^^
+Data Format 3 (RAWv1) and 5 (RAWv2)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
