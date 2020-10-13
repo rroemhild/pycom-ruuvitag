@@ -1,5 +1,0 @@
-cd lib
-md ruuvitag
-cd ruuvitag
-lcd ruuvitag
-mput .*\.py
