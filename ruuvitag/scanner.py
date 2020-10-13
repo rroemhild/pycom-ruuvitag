@@ -13,15 +13,13 @@ class RuuviTagScanner(RuuviTag):
     ignored as long the device is not resetted.
     """
 
-    def __init__(self, whitelist=None):
-        super().__init__(whitelist)
+    def __init__(self, whitelist=None, antenna=None):
+        super().__init__(whitelist, antenna)
 
     def find_ruuvitags(self, timeout=10):
         scanned_tags = {}
         ruuvi_tags = []
 
-        # enable bluetooth and start scanning
-        self.bluetooth.init()
         self.bluetooth.start_scan(timeout)
 
         get_adv = self.bluetooth.get_adv
@@ -41,9 +39,6 @@ class RuuviTagScanner(RuuviTag):
 
                 # add tag to scanned list
                 scanned_tags[mac] = adv
-
-        # disable bluetooth
-        self.bluetooth.deinit()
 
         for mac in scanned_tags:
             tag = self.get_tag(mac, scanned_tags[mac])

@@ -9,11 +9,11 @@ from ruuvitag.decoder import (
 
 
 class RuuviTag:
-    def __init__(self, whitelist=None):
+    def __init__(self, whitelist=None, antenna=None):
         self._whitelist = whitelist
         self._blacklist = []
         self.bluetooth = Bluetooth()
-        self.bluetooth.deinit()
+        self.bluetooth.init(antenna=antenna)
 
     def __repr__(self):
         return "{}(whitelist={!r}, blacklist={!r})".format(
@@ -50,25 +50,25 @@ class RuuviTag:
         return tag(mac.decode("utf-8"), adv.rssi, *data)
 
     def get_data(self, adv):
-        data = self.get_data_format_2and4(adv)
-
-        if data is not None:
-            return (2, data)
-
+        # raw1 and raw2 format
         data = self.get_data_format_raw(adv)
-
         if data is not None:
             return data
+
+        # deprecated url format
+        data = self.get_data_format_2and4(adv)
+        if data is not None:
+            return (2, data)
 
     @staticmethod
     def get_data_format_2and4(adv):
         """
         Test if device data is in data format 2 or 4.
 
-        Returns measurement data or None it not in format 2 or 4.
+        Returns measurement data or None if not in format 2 or 4.
         """
-        data = adv.data.decode("utf-8")
         try:
+            data = adv.data.decode("utf-8")
             index = data.find("ruu.vi/#")
             if index > -1:
                 return data[(index + 8):]

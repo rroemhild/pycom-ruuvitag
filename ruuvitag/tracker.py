@@ -13,11 +13,10 @@ class RuuviTagTracker(RuuviTag):
     ignored as long this device is not resetted.
     """
 
-    def __init__(self, whitelist=None):
-        super().__init__(whitelist)
+    def __init__(self, whitelist=None, antenna=None):
+        super().__init__(whitelist, antenna)
 
     def track_ruuvitags(self, callback):
-        self.bluetooth.init()
         self.bluetooth.start_scan(-1)
 
         get_adv = self.bluetooth.get_adv
