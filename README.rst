@@ -14,19 +14,7 @@ This package comes with a scanner and a tracker. The scanner scans for RuuviTags
 Installation
 ------------
 
-The easiest way to install the package is via ``upip``:
-
->>> import upip
->>> upip.install('micropython-ruuvitag')
-
-For manual installation copy the ``ruuvitag`` directory with all files to your device ``lib`` directory.
-
-Install with mpfshell
-~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: shell
-
-    $ mpfshell ttyUSB0 -s install.mpf
+With Pymakr you can upload the project to your pycom device. ``pymakr.conf`` makes sure that only the relevant files are copied to your device.
 
 
 Scanner
