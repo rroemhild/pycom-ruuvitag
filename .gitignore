@@ -2,4 +2,4 @@ MANIFEST
 __pycache__
 *.egg-info
 dist/
-main.py
+.vscode
