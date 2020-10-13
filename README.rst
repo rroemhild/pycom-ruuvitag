@@ -1,8 +1,10 @@
-====================================
-Pycom's MicroPython RuuviTag Scanner
-====================================
+==================================
+Pycom MicroPython RuuviTag Scanner
+==================================
 
 Harvest data from `RuuviTag BLE Sensor Beacon <http://ruuvitag.com/>`_ with the `Pycom <https://pycom.io/>`_ devices.
+
+**This repository was renamend from ``micropython-ruuvitag`` to ``pycom-ruuvitag`` as for this version only works on the Pycom devices and to use the namespace ``micropython-ruuvitag`` for the upstream MicroPython version.**
 
 pycom-ruuvitag supports `Data Format 2, 3, 4 and 5 <https://github.com/ruuvi/ruuvi-sensor-protocols>`_.
 
