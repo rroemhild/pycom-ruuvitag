@@ -1,3 +1,4 @@
+from ruuvitag.format import RuuviTagRAW
 from ubinascii import hexlify
 
 from ruuvitag.core import RuuviTag
@@ -42,6 +43,7 @@ class RuuviTagScanner(RuuviTag):
 
         for mac in scanned_tags:
             tag = self.get_tag(mac, scanned_tags[mac])
-            ruuvi_tags.append(tag)
+            if isinstance(tag, RuuviTagRAW):
+                ruuvi_tags.append(tag)
 
         return ruuvi_tags

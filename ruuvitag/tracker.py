@@ -1,3 +1,4 @@
+from ruuvitag.format import RuuviTagRAW
 from ubinascii import hexlify
 
 from ruuvitag.core import RuuviTag
@@ -35,4 +36,5 @@ class RuuviTagTracker(RuuviTag):
                     continue
 
                 tag = self.get_tag(mac, adv)
-                callback(tag)
+                if isinstance(tag, RuuviTagRAW):
+                    callback(tag)
