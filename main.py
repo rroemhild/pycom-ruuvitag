@@ -17,12 +17,15 @@ def scan(rts):
 
 
 def main():
+    delay = 30
     rts = RuuviTagScanner()
 
     try:
         while True:
+            print("Scanning...")
             scan(rts)
-            utime.sleep_ms(5000)
+            print("Sleep for {} seconds.".format(delay))
+            utime.sleep(delay)
     except KeyboardInterrupt:
         if rts.bluetooth.isscanning():
             rts.bluetooth.stop_scan()
