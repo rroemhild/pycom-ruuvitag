@@ -9,8 +9,9 @@ def scan(rts):
     print("Found {} Ruuvitags".format(len(tags)))
 
     for t in tags:
-        print("MAC: {}, RSSI: {}, Format: {}, Temp: {}, Humid: {}".format(
-            t.mac, t.rssi, t.format, t.temperature, t.humidity
+        print(
+            "MAC: {}, RSSI: {}, Format: {}, Temp: {}, Humid: {}".format(
+                t.mac, t.rssi, t.format, t.temperature, t.humidity
             )
         )
 
